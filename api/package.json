@@ -2,11 +2,13 @@
   "name": "api",
   "version": "0.0.0",
   "main": "index.js",
-  "scripts": {
-  },
-  "author":{
+  "scripts": {},
+  "author": {
     "name": "Eduardo Barbosa",
-    "email": "eduardo@rede.ulbra.br" 
-  } ,
-  "license": "MIT"
+    "email": "eduardo@rede.ulbra.br"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.13.4"
+  }
 }
