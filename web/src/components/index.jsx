@@ -1,2 +1,3 @@
 export * from './icon'
-export * from  './input'
+export * from './input'
+export * from './card'
