@@ -250,6 +250,7 @@ async function main(){
     await prisma.game.createMany({
         data: games
     })
+    
 }
 
 main()
