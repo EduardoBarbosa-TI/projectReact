@@ -1,9 +1,22 @@
 import axios from 'axios'
+import { useFormik } from 'formik'
+import * as yup from "yup"
+
 import {Icon, Input} from '~/components'
 
 
 
+
 export const SignUp = () => {
+    const formik = useFormik({
+        onSubmit: () => {},
+        initialValues: {
+            name: '',
+            username: '',
+            email: '',
+            password: ''
+        }
+    })
     return (
         <div>
             <header className=" p-4 border-b border-red-300">
