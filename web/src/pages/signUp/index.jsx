@@ -28,6 +28,8 @@ export const SignUp = () => {
                 url: '/users',
                 data: values
             })
+            console.log(res.data)
+
 
         },
         initialValues: {

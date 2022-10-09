@@ -1,14 +1,32 @@
-import { useLocalStorage } from 'react-use'
+import { useState,useEffect } from 'react'
+import { useLocalStorage, useAsyncFn } from 'react-use'
 import { Navigate } from 'react-router-dom'
+import axios from 'axios'
+import { format, formatISO } from 'date-fns'
+
 import { Icon, Card, DateSelect } from '~/components'
 
 export const Dashboard = () => {
+    const [currentDate, setDate] = useState(formatISO(new Date(2022, 10, 20)))
     const [auth] = useLocalStorage('auth', {})
+    const [state, doFetch] = useAsyncFn(async (params) => {
+        const res = await axios({
+            method: 'get',
+            baseURL: 'http://localhost:3000',
+            url: '/games',
+            params
+        })
+        return res.data
+    })
+
+    useEffect(() => {
+        doFetch({ gameTime: currentDate })
+    }, [currentDate])
 
     if (!auth?.user?.id) {
         return <Navigate to="/" repalce={true} />
-      }
-    
+    }
+
     return (
         <>
             <header className="bg-red-500 text-white p-4">
@@ -31,26 +49,21 @@ export const Dashboard = () => {
 
                 <section id='content' className='container max-w-3xl  p-4 space-y-4'>
 
-                    <DateSelect />
+                    <DateSelect currentDate={currentDate} onChange={setDate}/>
 
                     <div className='space-y-4'>
-                        <Card
-                            timeA={{ slug: 'sui' }}
-                            timeB={{ slug: 'cam' }}
-                            match={{ time: '7:00' }}
-                        />
-                        <Card
-                            timeA={{ slug: 'uru' }}
-                            timeB={{ slug: 'cor' }}
-                            match={{ time: '13:30' }}
-                        />
-                        <Card
-                            timeA={{ slug: 'por' }}
-                            timeB={{ slug: 'gan' }}
-                            match={{ time: '17:00' }}
-                        />
-                    </div>
+                        {state.loading && 'Carregando jogoas...'}
+                        {state.error && 'Ops! Algo deu errado.'}
 
+                        {!state.loading && !state.error && state.value?.map(game => (
+                            <Card
+                                gameId={game.id}
+                                homeTeam={ game.homeTeam }
+                                awayTeam={ game.awayTeam }
+                                gameTime={format(new Date(game.gameTime),'H:mm')}
+                            />
+                        ))}
+                    </div>
                 </section>
             </main>
         </>
