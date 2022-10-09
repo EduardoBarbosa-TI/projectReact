@@ -1,11 +1,20 @@
+import { useLocalStorage } from 'react-use'
+import { Navigate } from 'react-router-dom'
+
 export function Home() {
+  const [auth] = useLocalStorage('auth', {})
+
+  if (auth?.user?.id) {
+    return <Navigate to="/dashboard" repalce={true} />
+  }
+
   return (
     <div className=" h-screen bg-red-700 text-white p-6 flex flex-col items-center space-y-6">
 
       <header className="container flex justify-center max-w-3xl p-4">
-        <img src="/img/logo.svg" className="w-40" alt="logo"/>
+        <img src="/img/logo.svg" className="w-40" alt="logo" />
       </header>
-      
+
 
       <div className="container p-4 flex-1 flex flex-col items-center md:flex-row space-y-5 md:space-y-0 md:space-x-6">
 
