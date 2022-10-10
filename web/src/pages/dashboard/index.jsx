@@ -1,5 +1,5 @@
-import { useState,useEffect } from 'react'
-import { useLocalStorage, useAsyncFn } from 'react-use'
+import { useState,useEffect} from 'react'
+import { useLocalStorage, useAsyncFn} from 'react-use'
 import { Navigate } from 'react-router-dom'
 import axios from 'axios'
 import { format, formatISO } from 'date-fns'
@@ -10,8 +10,24 @@ export const Dashboard = () => {
 
     const [currentDate, setDate] = useState(formatISO(new Date(2022, 10, 20)))
     const [auth] = useLocalStorage('auth', {})
+
+    const [hunches, fetchHunches] = useAsyncFn(async () => {
+        const res = await axios({
+            method: 'get',
+            baseURL: 'http://localhost:3000',
+            url: `/${auth.user.username}`
+        })
+
+        const hunches= res.data.reduce((acc, hunch) => {
+            acc[hunch.gameId] = hunch
+            return acc
+        },{})
+
+
+        return hunches
+    })
     
-    const [state, doFetch] = useAsyncFn(async (params) => {
+    const [games, fetchGames] = useAsyncFn(async (params) => {
         const res = await axios({
             method: 'get',
             baseURL: 'http://localhost:3000',
@@ -21,8 +37,16 @@ export const Dashboard = () => {
         return res.data
     })
 
+    const isLoading = games.loading || hunches.loading
+    const hasError = games.error || hunches.error
+    const isDone = !isLoading && !hasError
+
+    useEffect(() =>{
+        fetchHunches()
+    }, [])
+
     useEffect(() => {
-        doFetch({ gameTime: currentDate })
+        fetchGames({ gameTime: currentDate })
     }, [currentDate])
 
     if (!auth?.user?.id) {
@@ -54,16 +78,18 @@ export const Dashboard = () => {
                     <DateSelect currentDate={currentDate} onChange={setDate}/>
 
                     <div className='space-y-4'>
-                        {state.loading && 'Carregando jogoas...'}
-                        {state.error && 'Ops! Algo deu errado.'}
+                        {isLoading && 'Carregando jogoas...'}
+                        {hasError && 'Ops! Algo deu errado.'}
 
-                        {!state.loading && !state.error && state.value?.map(game => (
+                        {isDone && games.value?.map(game => (
                             <Card
                                 key={game.id}
                                 gameId={game.id}
                                 homeTeam={ game.homeTeam }
                                 awayTeam={ game.awayTeam }
                                 gameTime={format(new Date(game.gameTime),'H:mm')}
+                                homeTeamScore={hunches?.value?.[game.id]?.homeTeamScore || ''}
+                                awayTeamScore={hunches?.value?.[game.id]?.awayTeamScore || ''}
                             />
                         ))}
                     </div>
