@@ -7,8 +7,10 @@ import { format, formatISO } from 'date-fns'
 import { Icon, Card, DateSelect } from '~/components'
 
 export const Dashboard = () => {
+
     const [currentDate, setDate] = useState(formatISO(new Date(2022, 10, 20)))
     const [auth] = useLocalStorage('auth', {})
+    
     const [state, doFetch] = useAsyncFn(async (params) => {
         const res = await axios({
             method: 'get',
@@ -57,6 +59,7 @@ export const Dashboard = () => {
 
                         {!state.loading && !state.error && state.value?.map(game => (
                             <Card
+                                key={game.id}
                                 gameId={game.id}
                                 homeTeam={ game.homeTeam }
                                 awayTeam={ game.awayTeam }
