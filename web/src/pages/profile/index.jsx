@@ -1,6 +1,6 @@
 import { useState,useEffect} from 'react'
 import { useLocalStorage, useAsyncFn} from 'react-use'
-import { useNavigate, useParams } from 'react-router-dom'
+import {  useParams, useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import { format, formatISO } from 'date-fns'
 
@@ -8,7 +8,8 @@ import { Icon, Card, DateSelect } from '~/components'
 
 export const Profile = () => {
     const params = useParams()
-    const navigate = useNavigate
+    const navigate = useNavigate()
+
     const [currentDate, setDate] = useState(formatISO(new Date(2022, 10, 20)))
     const [auth, setAuth] = useLocalStorage('auth', {})
     
@@ -48,7 +49,7 @@ export const Profile = () => {
     }
 
     const isLoading = games.loading || loading
-    
+
     const hasError = games.error || error
     const isDone = !isLoading && !hasError
 
