@@ -1,0 +1,8 @@
+{
+    "resrite": [
+        {
+            "source": "/(.*",
+            "destination":"/app"
+        }
+    ]
+}
