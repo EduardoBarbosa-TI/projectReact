@@ -14,7 +14,7 @@ export const Dashboard = () => {
     const [{value: user, loading, error }, fetchHunches] = useAsyncFn(async () => {
         const res = await axios({
             method: 'get',
-            baseURL: 'http://localhost:3000',
+            baseURL: import.meta.env.VITE_API_URL,
             url: `/${auth.user.username}`
         })
 
@@ -33,7 +33,7 @@ export const Dashboard = () => {
     const [games, fetchGames] = useAsyncFn(async (params) => {
         const res = await axios({
             method: 'get',
-            baseURL: 'http://localhost:3000',
+            baseURL: import.meta.env.VITE_API_URL,
             url: '/games',
             params
         })

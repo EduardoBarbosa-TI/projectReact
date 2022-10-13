@@ -6,6 +6,8 @@ import { format, formatISO } from 'date-fns'
 
 import { Icon, Card, DateSelect } from '~/components'
 
+
+
 export const Profile = () => {
     const params = useParams()
     const navigate = useNavigate()
@@ -16,7 +18,7 @@ export const Profile = () => {
     const [{value: user, loading, error }, fetchHunches] = useAsyncFn(async () => {
         const res = await axios({
             method: 'get',
-            baseURL: 'http://localhost:3000',
+            baseURL: import.meta.env.VITE_API_URL,
             url: `/${params.username}`
         })
 
@@ -35,7 +37,7 @@ export const Profile = () => {
     const [games, fetchGames] = useAsyncFn(async (params) => {
         const res = await axios({
             method: 'get',
-            baseURL: 'http://localhost:3000',
+            baseURL: import.meta.env.VITE_API_URL,
             url: '/games',
             params
         })
