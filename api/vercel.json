@@ -1,5 +1,5 @@
 {
-    "resrite": [
+    "rewrites": [
         {
             "source": "/(.*)",
             "destination":"/app"
