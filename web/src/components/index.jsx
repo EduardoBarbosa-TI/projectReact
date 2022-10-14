@@ -1,4 +1,4 @@
 export * from './icon'
-export * from './Input'
+export * from './input'
 export * from './Card'
 export * from './DateSelect'
